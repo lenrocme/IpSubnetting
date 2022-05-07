@@ -69,8 +69,8 @@ fun Body(viewModel: MainViewModel) {
         ButtonTakeMainInput(viewModel)
         LabelSetResult("${viewModel.obj.value.nrOfHosts}")
         LabelSetResult("${viewModel.obj.value.nrOfFreeHosts}")
-        LabelSetResult(viewModel.obj.value.SubnetMask)
-        LabelSetResult("${viewModel.obj.value.nrOfHosts}")
+        LabelSetResult(viewModel.obj.value.NetMask)
+        LabelSetResult(viewModel.obj.value.CIDR)
         TextFieldMainEx()
     }
 }

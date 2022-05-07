@@ -1,5 +1,6 @@
 package com.malferma.subnetting
 
+import android.util.Log
 import com.malferma.model.Ipv4_Subnet
 import com.malferma.model.Ipv6_Subnet
 import kotlin.math.pow
@@ -20,17 +21,18 @@ class Subnetting {
     fun test(): Int {
         this.ipv4.IpAddress = "192.168.0.1"
         this.ipv4.CIDR = "/27"
-        this.ipv4.SubnetMask = "255.255.192.0"
+        this.ipv4.NetMask = "255.255.192.0"
         return calcMaxNrOfHost(this.ipv4.CIDR)
     }
 
-    fun mainTest(): Ipv4_Subnet {
-        this.ipv4.IpAddress = "192.168.0.1"
-        this.ipv4.CIDR = "27"
-        this.ipv4.SubnetMask = "255.255.192.0"
-        this.ipv4.nrOfHosts = calcMaxNrOfHost(this.ipv4.CIDR)
-        this.ipv4.nrOfFreeHosts = calcMaxNrOfFreeHost(this.ipv4.nrOfHosts)
-        this.ipv4.SubnetMask = calcSubnetFromCidr(this.ipv4.CIDR)
+    fun mainTest(): Ipv4_Subnet = with(this.ipv4){
+        IpAddress = "192.168.0.1"
+        CIDR = "27"
+        NetMask = "255.255.192.0"
+        nrOfHosts = calcMaxNrOfHost(CIDR)
+        nrOfFreeHosts = calcMaxNrOfFreeHost(nrOfHosts)
+        NetMask = calcSubnetFromCidr(CIDR)
+        CIDR = calcCiderFromSubnet(NetMask).toString()
         return ipv4
     }
 
@@ -66,9 +68,9 @@ class Subnetting {
     }
 
     /**
-     * Find the subnet mask of network from the CIDR
+     * Find the Netmask of network from the CIDR
      * @param cidr The CIDR of the network
-     * @return The Subnet mask of the network*/
+     * @return The Netmask of the network*/
     private fun calcSubnetFromCidr(cidr : String): String{
         val formattedCidr = getIntOfTheCidr(cidr)
         val nrOfFullOctets = formattedCidr/8
@@ -77,5 +79,28 @@ class Subnetting {
         val emptyBits = 2.0.pow(octetBytes.toDouble()).toInt()
         val octetBits = 256 - emptyBits
         return "255.".repeat(nrOfFullOctets) + octetBits+ ".0".repeat(nrOfEmptyOctet-1)
+    }
+
+    /**
+     * Calculate the CIDR of the Network from the Netmask
+     * @param netMask The Netmask of the Network
+     * @return The CIDR of the Network*/
+    private fun calcCiderFromSubnet(netMask: String): Int {
+        var countFullOctet = 0
+        val octetArr = netMask.split('.')
+        octetArr.forEach {
+            if (it == "255")
+                countFullOctet += 1
+        }
+        val bitsOfActivOctet = octetArr[countFullOctet].toInt()
+        val emptyBits = 256 - bitsOfActivOctet
+        var bytsOfActiveOctet = 0
+        for (bytes in 1..8) {
+            if (2.0.pow(bytes.toDouble()).toInt() == emptyBits) {
+                bytsOfActiveOctet = 8 - bytes
+                break
+            }
+        }
+        return bytsOfActiveOctet + countFullOctet * 8   // The CIDR value of the Network
     }
 }
