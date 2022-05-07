@@ -1,6 +1,5 @@
 package com.malferma.subnetting
 
-import android.util.Log
 import com.malferma.model.Ipv4_Subnet
 import com.malferma.model.Ipv6_Subnet
 import kotlin.math.pow
@@ -29,8 +28,8 @@ class Subnetting {
         IpAddress = "192.168.0.1"
         CIDR = "27"
         NetMask = "255.255.192.0"
-        nrOfHosts = calcMaxNrOfHost(CIDR)
-        nrOfFreeHosts = calcMaxNrOfFreeHost(nrOfHosts)
+        NrOfHosts = calcMaxNrOfHost(CIDR)
+        NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
         NetMask = calcSubnetFromCidr(CIDR)
         CIDR = calcCiderFromSubnet(NetMask).toString()
         return ipv4
@@ -39,7 +38,8 @@ class Subnetting {
     /**
      * Transform CIDR from user imputed form to an Integer
      * @param networkCidr The CIDR of the Network
-     * @return The Integer value of the CIDR*/
+     * @return The Integer value of the CIDR
+     * */
     private fun getIntOfTheCidr(networkCidr : String): Int{
         return if (networkCidr.contains('/'))
             networkCidr.drop(1).toInt()
@@ -50,7 +50,8 @@ class Subnetting {
     /**
      * Calculate maximal nr of hosts in the network
      * @param networkCidr the CIDR of the IPv4
-     * @return maximal nr of hosts*/
+     * @return maximal nr of hosts
+     * */
     private fun calcMaxNrOfHost(networkCidr : String): Int {
         val cidr = getIntOfTheCidr(networkCidr)
         return if (cidr != 0)
@@ -62,7 +63,8 @@ class Subnetting {
     /**
      * Calculate maximal nr of FREE hosts in the network
      * @param maxNrOfHost maximal available nr of Hosts in the network
-     * @return maximal nr of FREE hosts*/
+     * @return maximal nr of FREE hosts
+     * */
     private fun calcMaxNrOfFreeHost(maxNrOfHost : Int): Int {
         return maxNrOfHost - 2
     }
@@ -70,7 +72,8 @@ class Subnetting {
     /**
      * Find the Netmask of network from the CIDR
      * @param cidr The CIDR of the network
-     * @return The Netmask of the network*/
+     * @return The Netmask of the network
+     * */
     private fun calcSubnetFromCidr(cidr : String): String{
         val formattedCidr = getIntOfTheCidr(cidr)
         val nrOfFullOctets = formattedCidr/8
@@ -84,8 +87,9 @@ class Subnetting {
     /**
      * Calculate the CIDR of the Network from the Netmask
      * @param netMask The Netmask of the Network
-     * @return The CIDR of the Network*/
-    private fun calcCiderFromSubnet(netMask: String): Int {
+     * @return The CIDR of the Network
+     * */
+    private fun calcCiderFromSubnet(netMask: String): Int{
         var countFullOctet = 0
         val octetArr = netMask.split('.')
         octetArr.forEach {
@@ -102,5 +106,26 @@ class Subnetting {
             }
         }
         return bytsOfActiveOctet + countFullOctet * 8   // The CIDR value of the Network
+    }
+
+    /**
+     * Get the active octet by CIDR
+     * @param cidr The CIDR of the Network
+     * @return The nr of the active octet of the Network
+     * */
+    private fun getActivOctetByCidr(cidr: Int): Int = cidr / 8 + 1
+
+    /**
+     * Get the active octet by Netmask
+     * @param netMask The netmask of the Network
+     * @return The nr of the active octet of the Network
+     * */
+    private fun getActivOctetByNetmask(netMask: String): Int {
+        var counterIndex = 1
+        netMask.split('.').forEach{
+            if(it == "255")
+                counterIndex++
+        }
+        return counterIndex
     }
 }
