@@ -19,7 +19,6 @@ import com.malferma.ui.mainView.MainViewModel
 import com.malferma.ui.theme.IpSubnettingTheme
 
 class MainActivity : ComponentActivity() {
-    var jora:String =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: MainViewModel by viewModels()
@@ -68,9 +67,10 @@ fun Body(viewModel: MainViewModel) {
         LabelMain()
         TextFieldMain()
         ButtonTakeMainInput(viewModel)
-        LabelSetResult(viewModel)
-        LabelSetResult(viewModel)
-        LabelSetResult(viewModel)
+        LabelSetResult("${viewModel.obj.value.nrOfHosts}")
+        LabelSetResult("${viewModel.obj.value.nrOfFreeHosts}")
+        LabelSetResult("${viewModel.obj.value.nrOfHosts}")
+        LabelSetResult("${viewModel.obj.value.nrOfHosts}")
         TextFieldMainEx()
     }
 }
@@ -87,9 +87,9 @@ fun LabelMain(imputedIP : String = "182.168.0.1/28"){
 }
 
 @Composable
-fun LabelSetResult(viewModel: MainViewModel, result: String = "182.168.0.1/28"){
+fun LabelSetResult(output: String, result: String = "182.168.0.1/28"){
     Text(
-        text = "IP: ${viewModel.counter.value}",
+        text = output,
         modifier = Modifier
             .clickable(onClick = {})
             .fillMaxWidth(),
@@ -138,7 +138,7 @@ fun TextFieldMainEx(){
 
 @Composable
 fun ButtonTakeMainInput(viewModel: MainViewModel) {
-    OutlinedButton(onClick = { viewModel.tryCounter() }) {
+    OutlinedButton(onClick = { viewModel.GetIpAtributs() }) {
         Text("Check")
     }
 }
