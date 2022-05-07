@@ -4,15 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.ContentAlpha.medium
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,12 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malferma.ui.mainView.MainViewModel
 import com.malferma.ui.theme.IpSubnettingTheme
-import java.lang.NullPointerException
 
 class MainActivity : ComponentActivity() {
+    var jora:String =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: MainViewModel by viewModels()
+
         setContent {
             IpSubnettingTheme {
                 Text("hello ble")
@@ -34,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    DefaultPreview()
+                    Default()
                 }
             }
         }
@@ -45,7 +43,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     IpSubnettingTheme {
-        Body()
+        Body(viewModel = MainViewModel())
+    }
+}
+
+
+@Composable
+fun Default() {
+    IpSubnettingTheme {
+        Body(viewModel = MainViewModel())
     }
 }
 
@@ -55,17 +61,17 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun Body(){
+fun Body(viewModel: MainViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(),
     ){
         LabelMain()
         TextFieldMain()
+        ButtonTakeMainInput(viewModel)
+        LabelSetResult(viewModel)
+        LabelSetResult(viewModel)
+        LabelSetResult(viewModel)
         TextFieldMainEx()
-        LabelSetResult()
-        LabelSetResult()
-        LabelSetResult()
-
     }
 }
 
@@ -81,9 +87,9 @@ fun LabelMain(imputedIP : String = "182.168.0.1/28"){
 }
 
 @Composable
-fun LabelSetResult(result : String = "182.168.0.1/28"){
+fun LabelSetResult(viewModel: MainViewModel, result: String = "182.168.0.1/28"){
     Text(
-        text = "IP: $result",
+        text = "IP: ${viewModel.counter.value}",
         modifier = Modifier
             .clickable(onClick = {})
             .fillMaxWidth(),
@@ -131,8 +137,8 @@ fun TextFieldMainEx(){
 }
 
 @Composable
-fun OutlinedButtonExample() {
-    OutlinedButton(onClick = { /* Do something! */ }) {
-        Text("I'm an Outlined Button")
+fun ButtonTakeMainInput(viewModel: MainViewModel) {
+    OutlinedButton(onClick = { viewModel.tryCounter() }) {
+        Text("Check")
     }
 }
