@@ -72,6 +72,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult(NetMask)
         LabelSetResult(CIDR)
         LabelSetResult(NetworkId)
+        LabelSetResult(FirstHostAddress)
         TextFieldMainEx()
     }
 }

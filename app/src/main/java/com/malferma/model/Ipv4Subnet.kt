@@ -12,4 +12,5 @@ data class Ipv4Subnet(
     var FirstHostAddress : String= "",
     var LastHostAddress : String = "",
     var RangeOfNetwork :String = "",
+    var IndexOfActiveOctet : Int = 0,
 )

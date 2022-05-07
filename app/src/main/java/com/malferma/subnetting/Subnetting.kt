@@ -31,8 +31,10 @@ class Subnetting {
         NrOfHosts = calcMaxNrOfHost(CIDR)
         NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
         NetMask = calcSubnetFromCidr(CIDR)
+        IndexOfActiveOctet = getActiveOctetByNetmask(NetMask)
         //CIDR = calcCiderFromSubnet(NetMask).toString()
         NetworkId = calcNetworkId(IpAddress, NetMask)
+        FirstHostAddress = calcFirstHostIpAddress(NetworkId)
         return ipv4
     }
 
@@ -40,7 +42,7 @@ class Subnetting {
      * Transform CIDR from user imputed form to an Integer
      * @param networkCidr The CIDR of the Network
      * @return The Integer value of the CIDR
-     * */
+     */
     private fun getIntOfTheCidr(networkCidr : String): Int{
         return if (networkCidr.contains('/'))
             networkCidr.drop(1).toInt()
@@ -52,7 +54,7 @@ class Subnetting {
      * Calculate maximal nr of hosts in the network
      * @param networkCidr the CIDR of the IPv4
      * @return maximal nr of hosts
-     * */
+     */
     private fun calcMaxNrOfHost(networkCidr : String): Int {
         val cidr = getIntOfTheCidr(networkCidr)
         return if (cidr != 0)
@@ -65,7 +67,7 @@ class Subnetting {
      * Calculate maximal nr of FREE hosts in the network
      * @param maxNrOfHost maximal available nr of Hosts in the network
      * @return maximal nr of FREE hosts
-     * */
+     */
     private fun calcMaxNrOfFreeHost(maxNrOfHost : Int): Int {
         return maxNrOfHost - 2
     }
@@ -74,7 +76,7 @@ class Subnetting {
      * Find the SubNetmask of network from the CIDR
      * @param cidr The CIDR of the network
      * @return The SubNetmask of the network
-     * */
+     */
     private fun calcSubnetFromCidr(cidr : String): String{
         val formattedCidr = this.getIntOfTheCidr(cidr)
         val nrOfFullOctets = formattedCidr/8
@@ -89,7 +91,7 @@ class Subnetting {
      * Calculate the CIDR of the Network from the SubNetmask
      * @param subnetMask The SubNetmask of the Network
      * @return The CIDR of the Network
-     * */
+     */
     private fun calcCiderFromSubnet(subnetMask: String): Int{
         var countFullOctet = 0
         val octetArr = subnetMask.split('.')
@@ -113,14 +115,14 @@ class Subnetting {
      * Get the active octet by CIDR
      * @param networkCidr The CIDR of the Network
      * @return The nr of the active octet of the Network
-     * */
+     */
     private fun getActiveOctetByCidr(networkCidr: Int): Int = networkCidr / 8 + 1
 
     /**
      * Get the active octet by SubNetmask
      * @param subnetMask The SubNetmask of the Network
      * @return The nr of the active octet of the Network
-     * */
+     */
     private fun getActiveOctetByNetmask(subnetMask: String): Int {
         var counterIndex = 1
         subnetMask.split('.').forEach{
@@ -136,7 +138,7 @@ class Subnetting {
      * @param networkCidr The CIDR of the Network
      * @param indexOfActiveOctet The index of the active octet of the Network
      * @return The Network ID
-     * */
+     */
     private fun calcNetworkId(ipAddress: String,
                               networkCidr: Int,
                               indexOfActiveOctet: Int = this.getActiveOctetByCidr(networkCidr)): String{
@@ -152,10 +154,10 @@ class Subnetting {
      * @param subnetMask The SubnetMask of the Network
      * @param indexOfActiveOctet The index of the active octet of the Network
      * @return The Network ID
-     * */
+     */
     private fun calcNetworkId(ipAddress: String,
                               subnetMask: String,
-                              indexOfActiveOctet: Int = this.getActiveOctetByNetmask(subnetMask)): String{
+                              indexOfActiveOctet: Int = this.getActiveOctetByNetmask(subnetMask),): String{
 
         val ipActiveOctet = ipAddress.split('.')[indexOfActiveOctet - 1].toInt()
         val subnetActiveOctet = subnetMask.split('.')[indexOfActiveOctet - 1].toInt()
@@ -166,6 +168,42 @@ class Subnetting {
         networkId[indexOfActiveOctet - 1] = networkIdActiveOctet.toString()
         for(i in indexOfActiveOctet..3) networkId[i] = "0"
 
-        return "${networkId[0]}.${networkId[1]}.${networkId[2]}.${networkId[3]}"
+        return this.toIpFormat(networkId)
     }
+
+    /**
+     * Find the first Host as IP address of the Network
+     * @param networkId The Network ID
+     * @return The first Host of the Network
+     */
+    private fun calcFirstHostIpAddress(networkId: String): String{
+        val firstHostActiveOctet = networkId.split('.')[3].toInt() + 1      // with index 3 is changed always last octet
+        val subnetAttribute = this.setActiveOctetToAttribute(3, firstHostActiveOctet.toString(), networkId)
+        return this.toIpFormat(subnetAttribute)
+    }
+
+    /**
+     * Set new value of the IP attribute into selected Octet
+     * @param indexOfOctet The index of the octet, which it's to change
+     * @param setNewValue The new value to be set into selected octet
+     * @param subnetIpAttribute The subnet attribute
+     * @return The list with Octets of subnet attribute
+     */
+    private fun setActiveOctetToAttribute(indexOfOctet: Int,
+                                          setNewValue: String,
+                                          subnetIpAttribute: String,) : List<String>{
+
+        val subnetAttribute = subnetIpAttribute.split('.').toMutableList()
+        subnetAttribute[indexOfOctet] = setNewValue
+        return subnetAttribute
+    }
+
+    /**
+     * Format the list of value of the subnet attribute to the string value
+     * @param arr The list with octets
+     * @return The transformed to the string arr of IP attribute
+     */
+    private fun toIpFormat(arr: List<String>): String =
+        "${arr[0]}.${arr[1]}.${arr[2]}.${arr[3]}"
+
 }
