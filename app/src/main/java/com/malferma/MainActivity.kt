@@ -60,17 +60,18 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun Body(viewModel: MainViewModel) {
+fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
     Column(
         modifier = Modifier.fillMaxSize(),
     ){
         LabelMain()
         TextFieldMain()
         ButtonTakeMainInput(viewModel)
-        LabelSetResult("${viewModel.obj.value.NrOfHosts}")
-        LabelSetResult("${viewModel.obj.value.NrOfFreeHosts}")
-        LabelSetResult(viewModel.obj.value.NetMask)
-        LabelSetResult(viewModel.obj.value.CIDR)
+        LabelSetResult("$NrOfHosts")
+        LabelSetResult("$NrOfFreeHosts")
+        LabelSetResult(NetMask)
+        LabelSetResult(CIDR)
+        LabelSetResult(NetworkId)
         TextFieldMainEx()
     }
 }
