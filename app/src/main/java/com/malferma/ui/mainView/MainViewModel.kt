@@ -24,7 +24,7 @@ class MainViewModel : ViewModel(){
     }
 
     fun GetIpAtributs(){
-        _obj.value = Subnetting().test2()
+        _obj.value = Subnetting().mainTest()
     }
 
 
