@@ -81,7 +81,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult(NetworkId)
         LabelSetResult(FirstHostAddress)
         LabelSetResult(BroadcastAddress)
-       // LabelSetResult(BroadcastAddress)
+        LabelSetResult(LastHostAddress)
        // LabelSetResult(BroadcastAddress)
         TextFieldMainEx()
     }

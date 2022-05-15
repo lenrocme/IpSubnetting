@@ -5,7 +5,7 @@ import com.malferma.model.Ipv6Subnet
 import kotlin.math.pow
 
 /**
- *
+ *@author lenroc https://github.com/lenrocme
  * **/
 class Subnetting {
     private var ipv4 : Ipv4Subnet = Ipv4Subnet()
@@ -36,6 +36,7 @@ class Subnetting {
         NetworkId = calcNetworkId(IpAddress, NetMask)
         FirstHostAddress = calcFirstHostIpAddress(NetworkId)
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkId, NetMask, IndexOfActiveOctet)
+        LastHostAddress = calcLastIpAddress(BroadcastAddress)
         return ipv4
     }
 
@@ -208,6 +209,20 @@ class Subnetting {
             else -> "${networkIdArr[0]}.${networkIdArr[1]}.${networkIdArr[2]}.$networkIdOctet"
         }
         return stringOf
+    }
+
+    /**
+     * Find the Last free to use IP address from the imputed Network
+     * @param broadcastAddress The broadcast address of the Network
+     * @return The last IP address of the Network
+     */
+    private fun calcLastIpAddress(broadcastAddress: String): String{
+        val addressArr: List<String> = broadcastAddress.split('.')
+        val valueOfLastOctet: Int = addressArr.last().toInt()
+        val setLastOctetValue: Int = valueOfLastOctet - 1
+        val lastIpAddressArr: List<String> = this.setActiveOctetToAttribute(3,      // set index - 1 (4 - 1)
+                                                        setLastOctetValue.toString(), broadcastAddress)
+        return this.toIpFormat(lastIpAddressArr)
     }
 
     /**
