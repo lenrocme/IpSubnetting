@@ -9,7 +9,12 @@ class Ipv4Validator {
     private fun deleteWhiteSpace(inputValue: String): String =
         inputValue.replace("\\s".toRegex(), "")
 
-    private fun validateSubnet(inputNetmask: String): Boolean{
+
+    /**
+     * Validate the netmask of the network
+     * @param inputNetmask The netmask of the network
+     * @return The True value, when the netmask from has right one*/
+    private fun validateNetmask(inputNetmask: String): Boolean{
         val netmask: String = inputNetmask.replace("\\s".toRegex(), "")
         val subnetArr: List<String> = this.deleteWhiteSpace(netmask).split('.')
         if (subnetArr.count() != 4)
