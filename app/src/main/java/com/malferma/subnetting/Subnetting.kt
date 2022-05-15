@@ -25,8 +25,8 @@ class Subnetting {
     }
 
     fun mainTest(): Ipv4Subnet = with(this.ipv4){
-        IpAddress = "192.244.123.233/12"
-        NetMask = "255.240.0.0"
+        IpAddress = "193.55.144.25"
+        NetMask = "255.255.255.248"
         CIDR = calcCiderFromSubnet(NetMask).toString()
         NrOfHosts = calcMaxNrOfHost(CIDR)
         NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
@@ -35,6 +35,7 @@ class Subnetting {
         //CIDR = calcCiderFromSubnet(NetMask).toString()
         NetworkId = calcNetworkId(IpAddress, NetMask)
         FirstHostAddress = calcFirstHostIpAddress(NetworkId)
+        BroadcastAddress = calcBroadCasOfIpAddress(NetworkId, NetMask, IndexOfActiveOctet)
         return ipv4
     }
 
@@ -149,7 +150,7 @@ class Subnetting {
     }
 
     /**
-     * Calculate Network ID by CIDR
+     * Calculate Network ID by SubnetMask
      * @param ipAddress The IP address from the searched Network
      * @param subnetMask The SubnetMask of the Network
      * @param indexOfActiveOctet The index of the active octet of the Network
@@ -180,6 +181,33 @@ class Subnetting {
         val firstHostActiveOctet = networkId.split('.')[3].toInt() + 1      // with index 3 is changed always last octet
         val subnetAttribute = this.setActiveOctetToAttribute(3, firstHostActiveOctet.toString(), networkId)
         return this.toIpFormat(subnetAttribute)
+    }
+
+    /**
+     * Find the Broadcast of the IP address of the Network
+     * @param networkId The Network ID of the Network
+     * @param jump The jump
+     * @param subnetMask The subnet mask
+     * @param indexOfActiveOctet The index of active Octet
+     * @return The Broadcast Address of the Network
+     */
+    private fun calcBroadCasOfIpAddress(networkId: String,
+                                        subnetMask: String,
+                                        indexOfActiveOctet: Int = this.getActiveOctetByNetmask(subnetMask),): String{
+
+        val networkIdArr = networkId.split('.')
+        val subnetActiveOctet = subnetMask.split('.')[indexOfActiveOctet - 1].toInt()
+        var networkIdOctet = networkId.split('.')[indexOfActiveOctet - 1].toInt()
+        val jump = 256 - subnetActiveOctet
+        networkIdOctet = networkIdOctet + jump - 1
+
+        val stringOf = when(indexOfActiveOctet){
+            1 -> "$networkIdOctet.255.255.255"
+            2 -> "${networkIdArr[0]}.$networkIdOctet.255.255"
+            3 -> "${networkIdArr[0]}.${networkIdArr[1]}.$networkIdOctet.255"
+            else -> "${networkIdArr[0]}.${networkIdArr[1]}.${networkIdArr[2]}.$networkIdOctet"
+        }
+        return stringOf
     }
 
     /**

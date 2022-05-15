@@ -55,6 +55,13 @@ fun Default() {
 }
 
 @Composable
+fun ButtonTakeMainInput(viewModel: MainViewModel) {
+    OutlinedButton(onClick = { viewModel.GetIpAtributs() }) {
+        Text("Check")
+    }
+}
+
+@Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
@@ -73,6 +80,9 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult(CIDR)
         LabelSetResult(NetworkId)
         LabelSetResult(FirstHostAddress)
+        LabelSetResult(BroadcastAddress)
+       // LabelSetResult(BroadcastAddress)
+       // LabelSetResult(BroadcastAddress)
         TextFieldMainEx()
     }
 }
@@ -136,11 +146,4 @@ fun TextFieldMainEx(){
         modifier = Modifier.padding(20.dp)
             .fillMaxWidth(),
     )
-}
-
-@Composable
-fun ButtonTakeMainInput(viewModel: MainViewModel) {
-    OutlinedButton(onClick = { viewModel.GetIpAtributs() }) {
-        Text("Check")
-    }
 }
