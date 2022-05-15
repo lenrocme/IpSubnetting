@@ -5,18 +5,13 @@ import java.lang.NumberFormatException
 class Ipv4Validator {
     var ipv4Input: String = ""
 
-
-    private fun deleteWhiteSpace(inputValue: String): String =
-        inputValue.replace("\\s".toRegex(), "")
-
-
     /**
      * Validate the netmask of the network
      * @param inputNetmask The netmask of the network
      * @return The True value, when the netmask from has right one*/
     private fun validateNetmask(inputNetmask: String): Boolean{
         val netmask: String = inputNetmask.replace("\\s".toRegex(), "")
-        val subnetArr: List<String> = this.deleteWhiteSpace(netmask).split('.')
+        val subnetArr: List<String> = netmask.split('.')
         if (subnetArr.count() != 4)
             return false
 
@@ -73,7 +68,7 @@ class Ipv4Validator {
      */
     private fun validateIpv4Address(ipv4Address: String): Boolean{
         val ipv4: String = ipv4Address.replace("\\s".toRegex(), "")
-        val ipv4List: List<String> = this.deleteWhiteSpace(ipv4).split('.')
+        val ipv4List: List<String> = ipv4.split('.')
         if (ipv4List.count() != 4)
             return false
         try{
