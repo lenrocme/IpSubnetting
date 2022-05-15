@@ -82,7 +82,26 @@ class Ipv4Validator {
         return true
     }
 
+    /**
+     * Validate the CIDR sufix
+     * @param cidrSufix The CIDR sufix
+     * @return The True value, when the form and value of the CIDR is the right one*/
     private fun validateCidr(cidrSufix: String): Boolean{
+        val cidr: String = cidrSufix.replace("\\s".toRegex(), "")
+        if (cidr.length > 3)
+            return false
+        val cidrFormat: Int
+        try{
+            cidrFormat = if (cidr.contains('/'))
+                cidr.drop(1).toInt()
+            else
+                cidr.toInt()
+        }
+        catch(e: NumberFormatException){
+            return false
+        }
+        if (cidrFormat > 31 || cidrFormat < 1)
+            return false
         return true
     }
 }
