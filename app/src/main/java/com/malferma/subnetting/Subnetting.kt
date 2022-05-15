@@ -25,17 +25,17 @@ class Subnetting {
     }
 
     fun mainTest(): Ipv4Subnet = with(this.ipv4){
-        IpAddress = "193.55.144.25"
-        NetMask = "255.255.255.248"
+        IpAddress = "0.0.0.0"
+        NetMask = "255.255.255.0"
         CIDR = calcCiderFromSubnet(NetMask).toString()
         NrOfHosts = calcMaxNrOfHost(CIDR)
         NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
         NetMask = calcSubnetFromCidr(CIDR)
-        IndexOfActiveOctet = getActiveOctetByNetmask(NetMask)
+        ActiveOctet = getActiveOctetByNetmask(NetMask)
         //CIDR = calcCiderFromSubnet(NetMask).toString()
-        NetworkId = calcNetworkId(IpAddress, NetMask)
-        FirstHostAddress = calcFirstHostIpAddress(NetworkId)
-        BroadcastAddress = calcBroadCasOfIpAddress(NetworkId, NetMask, IndexOfActiveOctet)
+        NetworkAddress = calcNetworkId(IpAddress, NetMask)
+        FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
+        BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
         return ipv4
     }
@@ -110,7 +110,8 @@ class Subnetting {
                 break
             }
         }
-        return bytesOfActiveOctet + countFullOctet * 8   // The CIDR value of the Network
+        val output = bytesOfActiveOctet + countFullOctet * 8   // The CIDR value of the Network
+        return output
     }
 
     /**

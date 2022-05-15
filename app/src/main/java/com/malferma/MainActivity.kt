@@ -78,7 +78,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult("$NrOfFreeHosts")
         LabelSetResult(NetMask)
         LabelSetResult(CIDR)
-        LabelSetResult(NetworkId)
+        LabelSetResult(NetworkAddress)
         LabelSetResult(FirstHostAddress)
         LabelSetResult(BroadcastAddress)
         LabelSetResult(LastHostAddress)
