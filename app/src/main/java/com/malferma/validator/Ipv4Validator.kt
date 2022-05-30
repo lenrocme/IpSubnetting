@@ -8,7 +8,7 @@ class Ipv4Validator {
     /**
      * Validate the netmask of the network
      * @param inputNetmask The netmask of the network
-     * @return The True value, when the netmask from has right one*/
+     * @return The True value, when the netmask form has right one*/
     private fun validateNetmask(inputNetmask: String): Boolean{
         val netmask: String = inputNetmask.replace("\\s".toRegex(), "")
         val subnetArr: List<String> = netmask.split('.')
