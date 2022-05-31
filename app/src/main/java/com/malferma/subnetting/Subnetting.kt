@@ -29,6 +29,7 @@ class Subnetting() {
         FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
+        RangeOfNetwork = "$FirstHostAddress - $LastHostAddress"
         return ipv4
     }
 
@@ -45,37 +46,39 @@ class Subnetting() {
         FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
+        RangeOfNetwork = "$FirstHostAddress - $LastHostAddress"
         return ipv4
     }
 
-    fun SubnettingByCidr(ip: String, cidr: String) = with(this.ipv4){
-        IpAddress = "0.0.0.0"
-        NetMask = "255.255.255.0"
-        CIDR = calcCiderFromSubnet(NetMask).toString()
+    fun SubnettingByCidr(ip: String, cidr: String): Ipv4Subnet = with(this.ipv4){
+        IpAddress = ip.split('/')[0]
+        CIDR = cidr
         NrOfHosts = calcMaxNrOfHost(CIDR)
         NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
         NetMask = calcSubnetFromCidr(CIDR)
         ActiveOctet = getActiveOctetByNetmask(NetMask)
-        //CIDR = calcCiderFromSubnet(NetMask).toString()
         NetworkAddress = calcNetworkId(IpAddress, NetMask)
         FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
+        RangeOfNetwork = "$FirstHostAddress - $LastHostAddress"
+        return ipv4
     }
 
-    fun SubnnetingByNetmask() = with(this.ipv4){
-        IpAddress = "0.0.0.0"
-        NetMask = "255.255.255.0"
+    fun SubnetingByNetmask(ip: String, netmask: String): Ipv4Subnet = with(this.ipv4){
+        IpAddress = ip.split('/')[0]
+        NetMask = netmask
         CIDR = calcCiderFromSubnet(NetMask).toString()
         NrOfHosts = calcMaxNrOfHost(CIDR)
         NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
         NetMask = calcSubnetFromCidr(CIDR)
         ActiveOctet = getActiveOctetByNetmask(NetMask)
-        //CIDR = calcCiderFromSubnet(NetMask).toString()
         NetworkAddress = calcNetworkId(IpAddress, NetMask)
         FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
+        RangeOfNetwork = "$FirstHostAddress - $LastHostAddress"
+        return ipv4
     }
 
     /**
@@ -96,7 +99,7 @@ class Subnetting() {
      * @return maximal nr of hosts
      */
     private fun calcMaxNrOfHost(networkCidr : String): Int {
-        val cidr = getIntOfTheCidr(networkCidr)
+        val cidr = this.getIntOfTheCidr(networkCidr)
         return if (cidr != 0)
             2.0.pow(32 - cidr.toDouble()).toInt()
         else
