@@ -16,7 +16,7 @@ class Ipv4Validator {
      * Validate IP with Cidr in together format
      * @param ipWithCidr The IP with Cidr
      * @return The True value, when format, IP address and Cidr a valid*/
-    private fun validateIpWithCidrFormat(ipWithCidr: String): Boolean{
+    fun validateIpWithCidrFormat(ipWithCidr: String): Boolean{
         if(!ipWithCidr.contains('/'))
             return false
         val ip = ipWithCidr.split('/')[0]

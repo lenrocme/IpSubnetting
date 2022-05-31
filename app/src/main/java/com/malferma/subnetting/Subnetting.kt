@@ -2,27 +2,19 @@ package com.malferma.subnetting
 
 import com.malferma.model.Ipv4Subnet
 import com.malferma.model.Ipv6Subnet
+import com.malferma.validator.Ipv4Validator
 import kotlin.math.pow
 
 /**
  *@author lenroc https://github.com/lenrocme
  * **/
-class Subnetting {
+class Subnetting() {
     private var ipv4 : Ipv4Subnet = Ipv4Subnet()
     private var ipv6 : Ipv6Subnet = Ipv6Subnet()
 
-    constructor()
 
-    constructor(ipv4 : Ipv4Subnet)
 
-    constructor(ipv6 : Ipv6Subnet)
 
-    fun test(): Int {
-        this.ipv4.IpAddress = "192.168.0.1"
-        this.ipv4.CIDR = "/27"
-        this.ipv4.NetMask = "255.255.192.0"
-        return calcMaxNrOfHost(this.ipv4.CIDR)
-    }
 
     fun mainTest(): Ipv4Subnet = with(this.ipv4){
         IpAddress = "0.0.0.0"
@@ -38,6 +30,52 @@ class Subnetting {
         BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
         LastHostAddress = calcLastIpAddress(BroadcastAddress)
         return ipv4
+    }
+
+    fun SubnettingByOnlineForm(ipCidr: String): Ipv4Subnet = with(this.ipv4){
+        val ipForm: List<String> = ipCidr.split('/')
+        IpAddress = ipForm[0]
+        CIDR = ipForm[1]
+        NetMask = calcSubnetFromCidr(CIDR)
+        NrOfHosts = calcMaxNrOfHost(CIDR)
+        NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
+        ActiveOctet = getActiveOctetByNetmask(NetMask)
+        //CIDR = calcCiderFromSubnet(NetMask).toString()
+        NetworkAddress = calcNetworkId(IpAddress, NetMask)
+        FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
+        BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
+        LastHostAddress = calcLastIpAddress(BroadcastAddress)
+        return ipv4
+    }
+
+    fun SubnettingByCidr(ip: String, cidr: String) = with(this.ipv4){
+        IpAddress = "0.0.0.0"
+        NetMask = "255.255.255.0"
+        CIDR = calcCiderFromSubnet(NetMask).toString()
+        NrOfHosts = calcMaxNrOfHost(CIDR)
+        NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
+        NetMask = calcSubnetFromCidr(CIDR)
+        ActiveOctet = getActiveOctetByNetmask(NetMask)
+        //CIDR = calcCiderFromSubnet(NetMask).toString()
+        NetworkAddress = calcNetworkId(IpAddress, NetMask)
+        FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
+        BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
+        LastHostAddress = calcLastIpAddress(BroadcastAddress)
+    }
+
+    fun SubnnetingByNetmask() = with(this.ipv4){
+        IpAddress = "0.0.0.0"
+        NetMask = "255.255.255.0"
+        CIDR = calcCiderFromSubnet(NetMask).toString()
+        NrOfHosts = calcMaxNrOfHost(CIDR)
+        NrOfFreeHosts = calcMaxNrOfFreeHost(NrOfHosts)
+        NetMask = calcSubnetFromCidr(CIDR)
+        ActiveOctet = getActiveOctetByNetmask(NetMask)
+        //CIDR = calcCiderFromSubnet(NetMask).toString()
+        NetworkAddress = calcNetworkId(IpAddress, NetMask)
+        FirstHostAddress = calcFirstHostIpAddress(NetworkAddress)
+        BroadcastAddress = calcBroadCasOfIpAddress(NetworkAddress, NetMask, ActiveOctet)
+        LastHostAddress = calcLastIpAddress(BroadcastAddress)
     }
 
     /**

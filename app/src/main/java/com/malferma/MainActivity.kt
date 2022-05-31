@@ -17,13 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malferma.ui.mainView.MainViewModel
 import com.malferma.ui.theme.IpSubnettingTheme
-import com.malferma.validator.Ipv4Validator
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel: MainViewModel by viewModels()
-
         setContent {
             IpSubnettingTheme {
                 Text("hello ble")
@@ -76,7 +74,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         modifier = Modifier.fillMaxSize(),
     ){
         LabelMain()
-        TextFieldIp()
+        TextFieldIp(viewModel)
         TextFieldNetmask()
         ButtonTakeMainInput(viewModel)
         LabelSetResult("$NrOfHosts")
@@ -120,18 +118,36 @@ fun LabelSetResult(output: String, result: String = "182.168.0.1/28"){
  * 'cdr' for cdr form
  * **/
 @Composable
-fun TextFieldIp(inputForm : String = "ip", hintTxt: String = "192.168.0.1/24", labelTxt: String = "IP address"){
-    var text by remember { mutableStateOf("") }
+fun TextFieldIp(inputForm : MainViewModel, hintTxt: String = "192.168.0.1/24", labelTxt: String = "IP address"){
+    var ip by remember { mutableStateOf("") }
+    var netmask by remember { mutableStateOf("") }
 
     OutlinedTextField(
         placeholder = { Text(hintTxt) },
-        value = text,
-        onValueChange = { text = it
-                        Ipv4Validator().check(text)},
+        value = ip,
+        onValueChange = { ip = it
+                        inputForm.SetIp(ip, netmask)
+
+                        },
         label = {Text(labelTxt)},
         textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(20.dp)
             .fillMaxWidth(),
+        singleLine = true,
+    )
+
+    OutlinedTextField(
+        placeholder = { Text("Enter Email") },
+        value = netmask,
+        onValueChange = { netmask = it
+            inputForm.SetIp(ip, netmask)
+
+        },
+        label = { Text("texts") },
+        textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
+        modifier = Modifier.padding(20.dp)
+            .fillMaxWidth(),
+        singleLine = true,
     )
 }
 
@@ -149,5 +165,6 @@ fun TextFieldNetmask(){
         textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(20.dp)
             .fillMaxWidth(),
+        singleLine = true,
     )
 }
