@@ -1,27 +1,37 @@
 package com.malferma.validator
 
-import android.util.Log
 import java.lang.NumberFormatException
 
 class Ipv4Validator {
-    var ipv4Input: String = ""
-
-    public fun check(userInput: String){
-        Log.d("jora", "all" + this.validateIpWithCidrFormat(userInput).toString())
-        Log.d("jora", "cidr" + this.validateCidr(userInput).toString())
-        Log.d("jora", "netmask" + this.validateNetmask(userInput).toString())
-    }
 
     /**
      * Validate IP with Cidr in together format
      * @param ipWithCidr The IP with Cidr
-     * @return The True value, when format, IP address and Cidr a valid*/
-    private fun validateIpWithCidrFormat(ipWithCidr: String): Boolean{
+     * @return The True value, when format, IP address and Cidr a valid
+     */
+    fun validateUserInput(ipWithCidr: String): Boolean{
         if(!ipWithCidr.contains('/'))
             return false
         val ip = ipWithCidr.split('/')[0]
         val cidr = ipWithCidr.split('/')[1]
         if(this.validateIpv4Address(ip) && this.validateCidr(cidr))
+            return true
+        return false
+    }
+
+    /**
+     * Validate IP and netmask or cidr
+     * @param ip The IP address
+     * @param netmaskOrCidr The netmask or Cidr
+     * @return The True value, IP address and netmask or Cidr a valid
+     */
+    fun validateUserInput(ip: String, netmaskOrCidr: String): Boolean{
+        if(!this.validateIpv4Address(ip))
+            if(!this.validateUserInput(ip))
+                return false
+        if(this.validateCidr(netmaskOrCidr))
+            return true
+        if(this.validateNetmask(netmaskOrCidr))
             return true
         return false
     }
