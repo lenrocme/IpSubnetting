@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.malferma.ui.mainView.MainViewModel
 import com.malferma.ui.theme.IpSubnettingTheme
+import com.malferma.validator.Ipv4Validator
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +57,10 @@ fun Default() {
 
 @Composable
 fun ButtonTakeMainInput(viewModel: MainViewModel) {
-    OutlinedButton(onClick = { viewModel.GetIpAtributs() }) {
+    OutlinedButton(onClick = {
+        viewModel.GetIpAtributs()
+
+    }) {
         Text("Check")
     }
 }
@@ -72,7 +76,8 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         modifier = Modifier.fillMaxSize(),
     ){
         LabelMain()
-        TextFieldMain()
+        TextFieldIp()
+        TextFieldNetmask()
         ButtonTakeMainInput(viewModel)
         LabelSetResult("$NrOfHosts")
         LabelSetResult("$NrOfFreeHosts")
@@ -83,7 +88,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult(BroadcastAddress)
         LabelSetResult(LastHostAddress)
        // LabelSetResult(BroadcastAddress)
-        TextFieldMainEx()
+
     }
 }
 
@@ -115,15 +120,14 @@ fun LabelSetResult(output: String, result: String = "182.168.0.1/28"){
  * 'cdr' for cdr form
  * **/
 @Composable
-fun TextFieldMain(inputForm : String = "ip"){
+fun TextFieldIp(inputForm : String = "ip", hintTxt: String = "192.168.0.1/24", labelTxt: String = "IP address"){
     var text by remember { mutableStateOf("") }
-    val hintTxt = "192.168.0.1/24"
-    val labelTxt = "IP address"
 
     OutlinedTextField(
         placeholder = { Text(hintTxt) },
         value = text,
-        onValueChange = { text = it },
+        onValueChange = { text = it
+                        Ipv4Validator().check(text)},
         label = {Text(labelTxt)},
         textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(20.dp)
@@ -132,7 +136,7 @@ fun TextFieldMain(inputForm : String = "ip"){
 }
 
 @Composable
-fun TextFieldMainEx(){
+fun TextFieldNetmask(){
     var text by remember { mutableStateOf("") }
     val hintText = "192.168.0.1/24"
     var labelText = ""

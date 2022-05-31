@@ -13,6 +13,7 @@ class MainViewModel : ViewModel(){
     val counter: State<Int> = _counter
     val maxHosts: State<Int> = _maxHosts
     val obj: State<Ipv4Subnet> = _obj
+    var ip: String = ""
 
     fun tryCounter(){
         _counter.value = _counter.value + 1
