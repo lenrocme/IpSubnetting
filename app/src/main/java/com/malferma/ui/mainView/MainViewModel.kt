@@ -10,10 +10,15 @@ class MainViewModel : ViewModel(){
     private val _counter = mutableStateOf(0)
     private val _maxHosts = mutableStateOf(0)
     private val _obj = mutableStateOf(Ipv4Subnet())
+    private val _ip = mutableStateOf("")
+    private val _netmask = mutableStateOf("")
     val counter: State<Int> = _counter
     val maxHosts: State<Int> = _maxHosts
+
     val obj: State<Ipv4Subnet> = _obj
-    var ip: String = ""
+
+    var ip: State<String> = _ip
+    var netmask: State<String> = _netmask
 
     fun tryCounter(){
         _counter.value = _counter.value + 1
