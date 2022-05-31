@@ -1,27 +1,50 @@
 package com.malferma.validator
 
-import android.util.Log
 import java.lang.NumberFormatException
 
 class Ipv4Validator {
-    var ipv4Input: String = ""
-
-    public fun check(userInput: String){
-        Log.d("jora", "all" + this.validateIpWithCidrFormat(userInput).toString())
-        Log.d("jora", "cidr" + this.validateCidr(userInput).toString())
-        Log.d("jora", "netmask" + this.validateNetmask(userInput).toString())
-    }
 
     /**
      * Validate IP with Cidr in together format
      * @param ipWithCidr The IP with Cidr
-     * @return The True value, when format, IP address and Cidr a valid*/
-    fun validateIpWithCidrFormat(ipWithCidr: String): Boolean{
+     * @return The True value, when format, IP address and Cidr a valid
+     */
+    fun validateUserInput(ipWithCidr: String): Boolean{
         if(!ipWithCidr.contains('/'))
             return false
         val ip = ipWithCidr.split('/')[0]
         val cidr = ipWithCidr.split('/')[1]
         if(this.validateIpv4Address(ip) && this.validateCidr(cidr))
+            return true
+        return false
+    }
+
+    /**
+     * Validate IP and netmask or cidr
+     * @param ip The IP address
+     * @param netmask The netmask
+     * @return The True value,when IP address and netmask a valid
+     */
+    fun validateUserInputByNetmask(ip: String, netmask: String): Boolean{
+        if(!this.validateIpv4Address(ip))
+            if(!this.validateUserInput(ip))
+                return false
+        if(this.validateNetmask(netmask))
+            return true
+        return false
+    }
+
+    /**
+     * Validate IP and netmask or cidr
+     * @param ip The IP address
+     * @param cidr The  Cidr
+     * @return The True value,when  IP address and Cidr a valid
+     */
+    fun validateUserInputByCidr(ip: String, cidr: String): Boolean{
+        if(!this.validateIpv4Address(ip))
+            if(!this.validateUserInput(ip))
+                return false
+        if(this.validateCidr(cidr))
             return true
         return false
     }
