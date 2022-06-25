@@ -22,21 +22,15 @@ import com.malferma.ui.theme.IpSubnettingTheme
 
 @Composable
 fun HomeScreen() {
-    Default()
+    IpSubnettingTheme {
+        Body(viewModel = MainViewModel())
+    }
 }
 
 @Composable
 @Preview
 fun HomeScreenPreview() {
     HomeScreen()
-}
-
-
-@Composable
-fun Default() {
-    IpSubnettingTheme {
-        Body(viewModel = MainViewModel())
-    }
 }
 
 @Composable
@@ -103,7 +97,6 @@ fun LabelSetResult(output: String, labelName: String = "None"){
 /**
  * Create main textField
  * @param inputForm set hintText and label => 'ip' for ip form, 'subNet' for subnet form,
- * 'cdr' for cdr form
  * **/
 @Composable
 fun TextFieldIp(inputForm : MainViewModel, hintTxt: String = "192.168.0.1/24", labelTxt: String = "IP address"){
