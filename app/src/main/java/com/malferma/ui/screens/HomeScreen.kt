@@ -1,55 +1,37 @@
-package com.malferma
+package com.malferma.ui.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.malferma.ui.mainView.MainViewModel
-import com.malferma.ui.navigation.Screen
 import com.malferma.ui.theme.IpSubnettingTheme
-import com.malferma.ui.screens.MainScreen
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val viewModel: MainViewModel by viewModels()
-        val currentScreen= mutableStateOf<Screen>(Screen.Subnetting)
-
-        setContent {
-            MainScreen()
-            /*IpSubnettingTheme {
-                Text("hello ble")
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Scaffold(
-                        bottomBar = {
-                            CustomBottomNavigation(currentScreenId = currentScreen.value.id) {
-                                currentScreen.value=it
-                            }
-                        }){
-
-                    }
-                    Default()
-                }
-            }*/
-        }
-    }
-}
-
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    IpSubnettingTheme {
-        //Body(viewModel = MainViewModel())
-    }
+fun HomeScreen() {
+    Default()
 }
 
-/*
+@Composable
+@Preview
+fun HomeScreenPreview() {
+    HomeScreen()
+}
+
+
 @Composable
 fun Default() {
     IpSubnettingTheme {
@@ -58,26 +40,11 @@ fun Default() {
 }
 
 @Composable
-fun ButtonTakeMainInput(viewModel: MainViewModel) {
-    OutlinedButton(onClick = {
-        viewModel.GetIpAtributs()
-
-    }) {
-        Text("Check")
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Composable
 fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            ,
+        ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -92,7 +59,7 @@ fun Body(viewModel: MainViewModel) = with(viewModel.obj.value){
         LabelSetResult("$NrOfFreeHosts", "Nr. of free Hosts to use")
         LabelSetResult(RangeOfNetwork, "Range of the Network")
 
-       // LabelSetResult(BroadcastAddress)
+        // LabelSetResult(BroadcastAddress)
 
     }
 }
@@ -126,11 +93,11 @@ fun LabelSetResult(output: String, labelName: String = "None"){
             .clickable(onClick = {})
             .fillMaxWidth()
             .padding(end = 10.dp)
-            ,
+        ,
         textAlign = TextAlign.Right,
         fontSize = 11.sp,
 
-    )
+        )
 }
 
 /**
@@ -153,12 +120,12 @@ fun TextFieldIp(inputForm : MainViewModel, hintTxt: String = "192.168.0.1/24", l
                 focusManager.moveFocus(FocusDirection.Down)
             else
                 focusManager.clearFocus()
-         }),
+        }),
         onValueChange = {
             if (it.length <= 18){
                 ip = it.replace("\\s".toRegex(), "")
-                       .replace("[^0-9./]".toRegex(), "")
-               // ip = it.replace("[^0-9./]".toRegex(), "")
+                    .replace("[^0-9./]".toRegex(), "")
+                // ip = it.replace("[^0-9./]".toRegex(), "")
                 netmask = inputForm.SetIp(ip, netmask)
                 inputForm.SetIpByNetmaskOrCidr(ip, netmask)
             }
@@ -182,7 +149,7 @@ fun TextFieldIp(inputForm : MainViewModel, hintTxt: String = "192.168.0.1/24", l
         onValueChange = {
             if (it.length <= 15) {
                 netmask = it.replace("\\s".toRegex(), "")
-                            .replace("[^0-9./]".toRegex(), "")
+                    .replace("[^0-9./]".toRegex(), "")
                 ip = inputForm.SetIpByNetmaskOrCidr(ip, netmask)
             }
         },
@@ -192,4 +159,4 @@ fun TextFieldIp(inputForm : MainViewModel, hintTxt: String = "192.168.0.1/24", l
             .fillMaxWidth(),
         singleLine = true,
     )
-}*/
+}
