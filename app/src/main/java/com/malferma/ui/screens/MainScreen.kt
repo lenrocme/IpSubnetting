@@ -23,6 +23,7 @@ import com.malferma.ui.theme.COLOR_BottomNavMenuSELECTED
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+
     Scaffold(
         bottomBar = { BottomBar(
             navController = navController,
@@ -56,9 +57,9 @@ fun RowScope.AddItem(
     navController: NavHostController
 ) {
     BottomNavigationItem(
-        label = {
+       /* label = {
             Text(text = screen.title)
-        },
+        },*/
         icon = {
             Icon(
                 painter = painterResource(id = screen.icon),
